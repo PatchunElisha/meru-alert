@@ -6,6 +6,7 @@ namespace App\Console\Commands;
 define('MAIL_TARGET_SEND_LIMIT', 3);
 
 use App\Mail\Notification;
+use App\Models\User;
 use App\Models\SearchResultStocks;
 use App\Models\SearchLists;
 use Facebook\WebDriver\Chrome\ChromeOptions;
@@ -104,7 +105,8 @@ class RegisterSearchCommand extends Command
                                 'url' => "https://jp.mercari.com{$url}",
                             ];
 
-                            Mail::to(config('mail.to.address'))->send(new Notification($mailData));
+                            $email = User::where('id', $search_list['users_id'])->value('email');
+                            Mail::to($email)->send(new Notification($mailData));
                             $send_mail_count += 1;
                         }
                     }
